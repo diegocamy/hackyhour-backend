@@ -1,15 +1,14 @@
-const User = require('../../db/models/users');
+const JWT = require('jsonwebtoken');
+require('dotenv').config();
 
 module.exports = {
-  signUp: async (req, res) => {
+  googleOauth: async (req, res, next) => {
     try {
-      const newUser = new User({
-        oauth: 'google',
-        name: 'Yeye',
-        email: 'yeye@gmail.com',
+      const user = req.user;
+      const token = await JWT.sign(user.toJSON(), process.env.JWT_SECRET, {
+        expiresIn: '1d',
       });
-      const savedUser = await newUser.save();
-      res.json(savedUser);
+      return res.status(200).json({ token: token });
     } catch (error) {
       console.log(error);
     }
