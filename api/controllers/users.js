@@ -1,6 +1,3 @@
-const JWT = require('jsonwebtoken');
-require('dotenv').config();
-
 module.exports = {
   googleOauth: async (req, res, next) => {
     try {

@@ -32,10 +32,10 @@ mongoose.connect(
 );
 
 //MIDDLEWARES
-// app.use(helmet());
+app.use(helmet());
 app.use(
   cookieSession({
-    name: 'session',
+    name: 'hackyhour',
     maxAge: 24 * 60 * 60 * 1000,
     keys: ['aegeagaegaeg'],
   })
