@@ -12,11 +12,11 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const {
-          _json: { name, picture, email },
+          _json: { sub: id, name, picture, email },
         } = profile;
 
         //check database to see if user already created
-        const foundUser = await User.findOne({ email: email });
+        const foundUser = await User.findOne({ id: id });
         if (foundUser) {
           return done(null, foundUser);
         }
@@ -24,6 +24,7 @@ passport.use(
         //if user is new
         const newUser = new User({
           oauth: 'google',
+          id,
           name,
           picture,
           email,

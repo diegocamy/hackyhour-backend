@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 //SERIALIZE AND DESERIALIZE USERS
@@ -24,26 +27,32 @@ const PORT = process.env.PORT || 5000;
 //CONNECT TO DB
 mongoose.connect(
   process.env.MONGODB_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   console.log('Connected to DB')
 );
 
 //MIDDLEWARES
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
+// app.use(helmet());
+app.use(
+  cookieSession({
+    name: 'session',
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: ['aegeagaegaeg'],
+  })
+);
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+  })
+);
 app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.json());
 
 //ROUTES
 app.get('/', (req, res) => res.json({ hello: `It's working 😎😎` }));
-app.get(
-  '/whatever',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    console.log(req.user);
-    res.redirect('/');
-  }
-);
 app.use('/api/users', userRoute);
+
 app.listen(PORT, () => console.log(`Server Listening on Port:${PORT}`));

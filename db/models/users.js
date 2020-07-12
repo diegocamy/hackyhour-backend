@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
+    id: {
+      type: String,
+      required: true,
+    },
     oauth: {
       type: String,
       enum: ['google', 'github'],
@@ -15,6 +19,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: false,
     },
     picture: String,
     bio: String,
