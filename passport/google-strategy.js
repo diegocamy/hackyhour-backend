@@ -7,17 +7,25 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:5000/api/users/googleOauth',
+      callbackURL: 'http://localhost:5000/api/auth/googleOauth',
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
         const {
-          _json: { sub: id, name, picture, email },
+          _json: { sub: id, name, picture },
         } = profile;
 
         //check database to see if user already created
         const foundUser = await User.findOne({ id: id });
         if (foundUser) {
+          //check if user has changed profile picture
+          if (foundUser.picture !== picture) {
+            //update user new profile pic on database
+            foundUser.picture = picture;
+            const updatedUser = await foundUser.save();
+            return done(null, updatedUser);
+          }
+
           return done(null, foundUser);
         }
 
@@ -27,7 +35,6 @@ passport.use(
           id,
           name,
           picture,
-          email,
         });
 
         await newUser.save();

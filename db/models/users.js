@@ -16,11 +16,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    email: {
-      type: String,
-      required: true,
-      unique: false,
-    },
     picture: String,
     bio: String,
     social: {

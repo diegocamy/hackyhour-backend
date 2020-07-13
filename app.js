@@ -19,6 +19,7 @@ passport.deserializeUser(function (user, done) {
 
 //IMPORT ROUTES
 const userRoute = require('./api/routes/users');
+const authRoute = require('./api/routes/auth');
 
 //EXPRESS APP AND PORT
 const app = express();
@@ -37,7 +38,7 @@ app.use(
   cookieSession({
     name: 'hackyhour',
     maxAge: 24 * 60 * 60 * 1000,
-    keys: ['aegeagaegaeg'],
+    keys: [process.env.COOKIE_SESSION_KEY],
   })
 );
 app.use(cookieParser());
@@ -54,5 +55,6 @@ app.use(express.json());
 //ROUTES
 app.get('/', (req, res) => res.json({ hello: `It's working 😎😎` }));
 app.use('/api/users', userRoute);
+app.use('/api/auth', authRoute);
 
 app.listen(PORT, () => console.log(`Server Listening on Port:${PORT}`));
