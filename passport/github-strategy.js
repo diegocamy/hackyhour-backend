@@ -9,7 +9,6 @@ passport.use(
       callbackURL: 'http://localhost:5000/api/auth/githubOauth',
     },
     async (accesToken, refreshToken, profile, done) => {
-      console.log(profile);
       const { id, avatar_url: picture, name } = profile._json;
       //check to find if user exists in db
       const foundUser = await User.findOne({ id: id });
