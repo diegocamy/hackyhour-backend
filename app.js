@@ -20,6 +20,7 @@ passport.deserializeUser(function (user, done) {
 //IMPORT ROUTES
 const userRoute = require('./api/routes/users');
 const authRoute = require('./api/routes/auth');
+const postRoute = require('./api/routes/posts');
 
 //EXPRESS APP AND PORT
 const app = express();
@@ -56,5 +57,6 @@ app.use(express.json());
 app.get('/', (req, res) => res.json({ hello: `It's working 😎😎` }));
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
+app.use('/api/posts', postRoute);
 
 app.listen(PORT, () => console.log(`Server Listening on Port:${PORT}`));

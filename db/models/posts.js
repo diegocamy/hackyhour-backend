@@ -20,6 +20,15 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
+    featuredImage: {
+      type: String,
+      required: true,
+    },
+    likes: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     post: {
       type: String,
       required: true,
