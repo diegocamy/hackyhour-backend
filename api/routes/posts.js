@@ -5,4 +5,6 @@ const { authCheck } = require('../../utils/utils');
 
 router.post('/', authCheck, postsController.createPost);
 
+router.get('/:slug', postsController.getPostById);
+
 module.exports = router;
