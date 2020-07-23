@@ -48,4 +48,28 @@ module.exports = {
       return res.status(500).json({ error });
     }
   },
+  getAllPosts: async (req, res, next) => {
+    try {
+      const results = await Post.aggregate([
+        {
+          $match: {
+            _id: { $exists: true },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: '_id',
+            as: 'author_info',
+          },
+        },
+        { $sort: { createdAt: -1 } },
+      ]);
+
+      return res.send(results);
+    } catch (error) {
+      return res.json({ error: error });
+    }
+  },
 };
