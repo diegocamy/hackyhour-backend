@@ -25,9 +25,9 @@ const PostSchema = new Schema(
       required: true,
     },
     likes: {
-      type: Number,
+      type: Object,
       required: true,
-      default: 0,
+      default: {},
     },
     post: {
       type: String,
@@ -40,6 +40,7 @@ const PostSchema = new Schema(
   },
   {
     timestamps: true,
+    minimize: false,
   }
 );
 

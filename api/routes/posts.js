@@ -9,4 +9,8 @@ router.get('/', postsController.getAllPosts);
 
 router.get('/:slug', postsController.getPostById);
 
+router.post('/like/:postId', authCheck, postsController.likePost);
+
+router.post('/dislike/:postId', authCheck, postsController.dislikePost);
+
 module.exports = router;

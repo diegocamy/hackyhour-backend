@@ -1,5 +1,6 @@
 const Post = require('../../db/models/posts');
 const User = require('../../db/models/users');
+const { update } = require('../../db/models/posts');
 module.exports = {
   createPost: async (req, res, next) => {
     try {
@@ -19,7 +20,6 @@ module.exports = {
         slug,
         description,
         featuredImage,
-        likes: 0,
         post,
         author: userId,
       });
@@ -70,6 +70,48 @@ module.exports = {
       return res.send(results);
     } catch (error) {
       return res.json({ error: error });
+    }
+  },
+  likePost: async (req, res, next) => {
+    try {
+      //get post from db
+      const blogPost = await Post.findById(req.params.postId);
+      const postAuthor = await User.findById(blogPost.author);
+
+      //check if user already liked the post
+      if (blogPost.likes[req.user._id] !== undefined) {
+        return;
+      }
+
+      //if the user hasn't liked the post, add a like and return updated post
+      blogPost.likes[req.user._id] = 'voted';
+      blogPost.markModified('likes');
+      await blogPost.save();
+
+      return res.json({ post: blogPost, author: postAuthor });
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
+  dislikePost: async (req, res, next) => {
+    try {
+      //get post from db
+      const blogPost = await Post.findById(req.params.postId);
+      const postAuthor = await User.findById(blogPost.author);
+
+      //check if user liked the post, then remove the like
+      if (blogPost.likes[req.user._id] !== undefined) {
+        delete blogPost.likes[req.user._id];
+        blogPost.markModified('likes');
+        await blogPost.save();
+
+        return res.json({ post: blogPost, author: postAuthor });
+      }
+
+      //if the user hasn't liked the post, return
+      return;
+    } catch (error) {
+      res.json({ error: error.message });
     }
   },
 };
