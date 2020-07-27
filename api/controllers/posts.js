@@ -114,4 +114,27 @@ module.exports = {
       res.json({ error: error.message });
     }
   },
+  getPostsByCategory: async (req, res, next) => {
+    try {
+      const posts = await Post.aggregate([
+        {
+          $match: {
+            category: req.params.categoryId,
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: '_id',
+            as: 'author_info',
+          },
+        },
+        { $sort: { createdAt: -1 } },
+      ]);
+      return res.send(posts);
+    } catch (error) {
+      return res.json({ error: error.message });
+    }
+  },
 };
