@@ -8,4 +8,6 @@ router.get('/islogged', authCheck, (req, res) => {
   res.json({ user: req.user });
 });
 
+router.get('/:id', userController.getUserProfile);
+
 module.exports = router;
