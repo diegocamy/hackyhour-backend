@@ -137,4 +137,17 @@ module.exports = {
       return res.json({ error: error.message });
     }
   },
+  getRelatedPosts: async (req, res, next) => {
+    try {
+      const posts = await Post.find({ category: req.params.categoryId });
+      const filteredPosts = posts.filter(p => p._id.toString() !== req.body.id);
+      const randomPosts = filteredPosts
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
+
+      return res.send(randomPosts);
+    } catch (error) {
+      return res.json({ error: error.message });
+    }
+  },
 };
