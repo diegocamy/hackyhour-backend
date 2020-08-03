@@ -139,7 +139,23 @@ module.exports = {
   },
   getRelatedPosts: async (req, res, next) => {
     try {
-      const posts = await Post.find({ category: req.params.categoryId });
+      console.log(req.body.id);
+      const posts = await Post.aggregate([
+        {
+          $match: {
+            category: req.params.categoryId,
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: '_id',
+            as: 'author_info',
+          },
+        },
+        { $sort: { createdAt: -1 } },
+      ]);
       const filteredPosts = posts.filter(p => p._id.toString() !== req.body.id);
       const randomPosts = filteredPosts
         .sort(() => 0.5 - Math.random())

@@ -15,6 +15,6 @@ router.post('/dislike/:postId', authCheck, postsController.dislikePost);
 
 router.get('/category/:categoryId', postsController.getPostsByCategory);
 
-router.get('/related/:categoryId', postsController.getRelatedPosts);
+router.post('/related/:categoryId', postsController.getRelatedPosts);
 
 module.exports = router;
