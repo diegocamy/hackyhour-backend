@@ -3,10 +3,9 @@ const router = express.Router();
 const userController = require('../controllers/users');
 const { authCheck } = require('../../utils/utils');
 
-//TODO PRIVATE USER ROUTES
-router.get('/islogged', authCheck, (req, res) => {
-  res.json({ user: req.user });
-});
+router.get('/islogged', authCheck, userController.getLoggedUser);
+
+router.post('/editProfile', authCheck, userController.editProfile);
 
 router.get('/:id', userController.getUserProfile);
 

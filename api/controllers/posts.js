@@ -139,7 +139,6 @@ module.exports = {
   },
   getRelatedPosts: async (req, res, next) => {
     try {
-      console.log(req.body.id);
       const posts = await Post.aggregate([
         {
           $match: {
