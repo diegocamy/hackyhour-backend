@@ -34,7 +34,7 @@ router.get(
 
 //login success
 router.get('/loginSuccess', (req, res) => {
-  res.redirect('http://localhost:3000/dashboard');
+  res.redirect('http://localhost:3000');
 });
 
 //check if user is logged in
