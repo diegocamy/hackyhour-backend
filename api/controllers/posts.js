@@ -189,6 +189,9 @@ module.exports = {
 
       if (!foundPost) return res.json({ error: 'Post not found' });
 
+      if (req.user && req.user._id.toString() !== foundPost.author.toString())
+        return res.json({ error: 'Only the author can edit the post' });
+
       const {
         title,
         category,
