@@ -5,6 +5,8 @@ const { authCheck } = require('../../utils/utils');
 
 router.post('/', authCheck, postsController.createPost);
 
+router.post('/edit-post/:slug', authCheck, postsController.editPost);
+
 router.get('/', postsController.getAllPosts);
 
 router.get('/:slug', postsController.getPostById);
@@ -16,5 +18,7 @@ router.post('/dislike/:postId', authCheck, postsController.dislikePost);
 router.get('/category/:categoryId', postsController.getPostsByCategory);
 
 router.post('/related/:categoryId', postsController.getRelatedPosts);
+
+router.delete('/:postId', postsController.deletePost);
 
 module.exports = router;

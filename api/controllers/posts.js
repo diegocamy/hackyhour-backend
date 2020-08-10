@@ -1,6 +1,7 @@
 const Post = require('../../db/models/posts');
 const User = require('../../db/models/users');
 const { update } = require('../../db/models/posts');
+const { post } = require('../routes/auth');
 module.exports = {
   createPost: async (req, res, next) => {
     try {
@@ -164,5 +165,51 @@ module.exports = {
     } catch (error) {
       return res.json({ error: error.message });
     }
+  },
+  deletePost: async (req, res, next) => {
+    try {
+      const foundPost = await Post.findById(req.params.postId);
+
+      if (!foundPost) return res.json({ error: 'No post found' });
+
+      if (req.user && req.user._id.toString() === foundPost.author.toString()) {
+        await foundPost.remove();
+        return res.send('Post Eliminado!');
+      } else {
+        return res.json({ error: 'Only the author can delete the post' });
+      }
+    } catch (error) {
+      return res.json({ error: error.message });
+    }
+  },
+  editPost: async (req, res, next) => {
+    try {
+      //SEARCH FOR POST ON DB
+      const foundPost = await Post.findOne({ slug: req.params.slug });
+
+      if (!foundPost) return res.json({ error: 'Post not found' });
+
+      const {
+        title,
+        category,
+        slug,
+        description,
+        featuredImage,
+        post,
+      } = req.body;
+
+      //UPDATE POST FIELDS
+
+      foundPost.title = title;
+      foundPost.slug = slug;
+      foundPost.category = category;
+      foundPost.description = description;
+      foundPost.featuredImage = featuredImage;
+      foundPost.post = post;
+
+      await foundPost.save();
+
+      return res.json({ post: foundPost });
+    } catch (error) {}
   },
 };
