@@ -213,6 +213,33 @@ module.exports = {
       await foundPost.save();
 
       return res.json({ post: foundPost });
-    } catch (error) {}
+    } catch (error) {
+      return res.json({ error: error.message });
+    }
+  },
+  searchPosts: async (req, res, next) => {
+    try {
+      const foundPosts = await Post.aggregate([
+        {
+          $match: {
+            _id: { $exists: true },
+            title: { $regex: req.params.searchTerm, $options: 'i' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: '_id',
+            as: 'author_info',
+          },
+        },
+        { $sort: { updatedAt: -1 } },
+      ]);
+
+      return res.send(foundPosts);
+    } catch (error) {
+      return res.json({ error: error.message });
+    }
   },
 };

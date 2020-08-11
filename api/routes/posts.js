@@ -9,6 +9,8 @@ router.post('/edit-post/:slug', authCheck, postsController.editPost);
 
 router.get('/', postsController.getAllPosts);
 
+router.get('/search/:searchTerm', postsController.searchPosts);
+
 router.get('/:slug', postsController.getPostById);
 
 router.post('/like/:postId', authCheck, postsController.likePost);
